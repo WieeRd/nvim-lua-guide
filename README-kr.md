@@ -1,61 +1,62 @@
-:arrow_upper_left: (Feeling lost? Use the GitHub TOC!)
+:arrow_upper_left: (깃허브 목차 기능을 사용해 보세요!)
 
-# Getting started using Lua in Neovim
+# Neovim에서 Lua를 사용해보자
 
-## Translations
+## 다른 언어
 
-- [:cn: Chinese version](https://github.com/glepnir/nvim-lua-guide-zh)
-- [:es: Spanish version](https://github.com/RicardoRien/nvim-lua-guide/blob/master/README.esp.md)
-- [:brazil: Portuguese version](https://github.com/npxbr/nvim-lua-guide/blob/master/README.pt-br.md)
-- [:jp: Japanese version](https://github.com/willelz/nvim-lua-guide-ja/blob/master/README.ja.md)
-- [:ru: Russian version](https://github.com/kuator/nvim-lua-guide-ru)
-- [🇺🇦 Ukrainian version](https://github.com/famiclone/nvim-lua-guide-ua)
+- [:us: 영어 (원본)](https://github.com/nanotee/nvim-lua-guide) 
+- [:cn: 중국어](https://github.com/glepnir/nvim-lua-guide-zh)
+- [:es: 스페인어](https://github.com/RicardoRien/nvim-lua-guide/blob/master/README.esp.md)
+- [:brazil: 포르투갈어](https://github.com/npxbr/nvim-lua-guide/blob/master/README.pt-br.md)
+- [:jp: 일본어](https://github.com/willelz/nvim-lua-guide-ja/blob/master/README.ja.md)
+- [:ru: 러시아어](https://github.com/kuator/nvim-lua-guide-ru)
+- [:ukraine: 우크라이나어](https://github.com/famiclone/nvim-lua-guide-ua)
 
-## Introduction
+## 소개
 
-The [integration of Lua](https://www.youtube.com/watch?v=IP3J56sKtn0) as a [first-class language inside Neovim](https://github.com/neovim/neovim/wiki/FAQ#why-embed-lua-instead-of-x) is shaping up to be one of its killer features.
-However, the amount of teaching material for learning how to write plugins in Lua is not as large as what you would find for writing them in Vimscript. This is an attempt at providing some basic information to get people started.
+TODO: [First-class-language](https://github.com/neovim/neovim/wiki/FAQ#why-embed-lua-instead-of-x)로써의 [Lua의 통합](https://www.youtube.com/watch?v=IP3J56sKtn0)은 Neovim의 killer feature가 되어가고 있습니다.
+그러나 Lua로 플러그인을 작성하는 것에 대해 배울 수 있는 자료들은 Vimscript에 관해 찾을 수 있는 것들에 비해 부족합니다. 이 가이드는 사람들이 Lua를 사용하기 시작하기 위한 기본적인 정보들을 제공하려는 시도입니다.
 
-This guide assumes you are using at least version 0.5 of Neovim.
+이 가이드는 여러분이 최소한 Neovim 버전 0.5 이상을 사용하고 있다고 가정합니다.
 
-### Learning Lua
+### Lua 배우기
 
-If you are not already familiar with the language, there are plenty of resources to get started:
+만약 이 언어에 익숙하지 않다면, 입문자를 위한 자료들은 쉽게 찾아볼 수 있습니다:
 
-- The [Learn X in Y minutes page about Lua](https://learnxinyminutes.com/docs/lua/) should give you a quick overview of the basics
-- [This guide](https://github.com/medwatt/Notes/blob/main/Lua/Lua_Quick_Guide.ipynb) is also a good resource for getting started quickly
-- If videos are more to your liking, Derek Banas has a [1-hour tutorial on the language](https://www.youtube.com/watch?v=iMacxZQMPXs)
-- Want something a little more interactive with runnable examples? Try [the LuaScript tutorial](https://www.luascript.dev/learn)
-- The [lua-users wiki](http://lua-users.org/wiki/LuaDirectory) is full of useful information on all kinds of Lua-related topics
-- The [official reference manual for Lua](https://www.lua.org/manual/5.1/) should give you the most comprehensive tour of the language (exists as a Vimdoc plugin if you want to read it from the comfort of your editor: [milisims/nvim-luaref](https://github.com/milisims/nvim-luaref))
+- [Lua에 대한 'Y분만에 X를 배우다' 페이지](https://learnxinyminutes.com/docs/lua/)에서 빠르게 기초를 학습할 수 있습니다
+- [이 가이드](https://github.com/medwatt/Notes/blob/main/Lua/Lua_Quick_Guide.ipynb) 또한 기본을 익히기에 좋은 자료입니다
+- 영상을 더 선호하는 편이라면, Derek Banas의 [1시간 분량 Lua 튜토리얼](https://www.youtube.com/watch?v=iMacxZQMPXs)이 있습니다
+- 좀 더 능동적이고 실행해볼 수 있는 예시들을 원하시나요? [LuaScript 튜토리얼](https://www.luascript.dev/learn)을 시도해보세요
+- [Lua 유저 위키](http://lua-users.org/wiki/LuaDirectory)는 온갖 종류의 Lua에 관련된 유용한 정보들로 가득합니다
+- [Lua 공식 매뉴얼](https://www.lua.org/manual/5.1/)에서 이 언어에 대한 가장 포괄적인 자료를 제공합니다 (에디터를 통해 편하게 보고 싶다면 Vim 플러그인도 존재합니다 [milisims/nvim-luaref](https://github.com/milisims/nvim-luaref))
 
-It should also be noted that Lua is a very clean and simple language. It is easy to learn, especially if you have experience with similar scripting languages like JavaScript. You may already know more Lua than you realise!
+Lua는 매우 깔끔하고 단순한 언어입니다. 배우기 쉬우며, JavaScript와 같은 비슷한 스크립트 언어에 경험이 있다면 더 그렇습니다. 여러분은 이미 생각보다 Lua를 상당히 많이 알고있을지도 모릅니다!
 
-Note: the version of Lua that Neovim embeds is [LuaJIT](https://staff.fnwi.uva.nl/h.vandermeer/docs/lua/luajit/luajit_intro.html) 2.1.0, which maintains compatibility with Lua 5.1.
+참고: Neovim에 탑재된 Lua의 버전은 [LuaJIT](https://staff.fnwi.uva.nl/h.vandermeer/docs/lua/luajit/luajit_intro.html) 2.1.0이며, Lua 5.1과 호환됩니다.
 
-### Existing tutorials for writing Lua in Neovim
+### Neovim에서의 Lua 사용법에 대한 존재하는 튜토리얼들
 
-A few tutorials have already been written to help people write plugins in Lua. Some of them helped quite a bit when writing this guide. Many thanks to their authors.
+Lua로 플러그인을 작성하는 것에 관한 튜토리얼들이 이미 몇 존재합니다. 그 중 일부는 이 가이드를 작성하는 데에도 상당한 도움이 되었습니다. 해당 튜토리얼들의 작성자들에게 감사를 표합니다.
 
-- [teukka.tech - From init.vim to init.lua](https://teukka.tech/luanvim.html)
-- [dev.to - How to write neovim plugins in Lua](https://dev.to/2nit/how-to-write-neovim-plugins-in-lua-5cca)
-- [dev.to - How to make UI for neovim plugins in Lua](https://dev.to/2nit/how-to-make-ui-for-neovim-plugins-in-lua-3b6e)
-- [ms-jpq - Neovim Async Tutorial](https://github.com/ms-jpq/neovim-async-tutorial)
-- [oroques.dev - Neovim 0.5 features and the switch to init.lua](https://oroques.dev/notes/neovim-init/)
-- [Building A Vim Statusline from Scratch - jdhao's blog](https://jdhao.github.io/2019/11/03/vim_custom_statusline/)
-- [Configuring Neovim using Lua](https://icyphox.sh/blog/nvim-lua/)
-- [Devlog | Everything you need to know to configure neovim using lua](https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/)
+- [teukka.tech - init.vim에서 init.lua로](https://teukka.tech/luanvim.html)
+- [dev.to - Lua로 Neovim 플러그인 작성하기](https://dev.to/2nit/how-to-write-neovim-plugins-in-lua-5cca)
+- [dev.to - Lua로 Neovim 플러그인 UI 만들기](https://dev.to/2nit/how-to-make-ui-for-neovim-plugins-in-lua-3b6e)
+- [ms-jpq - Neovim 비동기 튜토리얼](https://github.com/ms-jpq/neovim-async-tutorial)
+- [oroques.dev - Neovim 0.5의 기능들과 init.lua로 전환하기](https://oroques.dev/notes/neovim-init/)
+- [직접 Vim 상태표시줄 만들기 - jdhao의 블로그](https://jdhao.github.io/2019/11/03/vim_custom_statusline/)
+- [Lua로 Neovim 설정하기](https://icyphox.sh/blog/nvim-lua/)
+- [Devlog | Lua로 Neovim을 설정하기 위해 알아야하는 모든 것](https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/)
 
-### Companion plugins
+### 도우미 플러그인들
 
-- [Vimpeccable](https://github.com/svermeulen/vimpeccable) - Plugin to help write your .vimrc in Lua
-- [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - All the lua functions I don't want to write twice
-- [popup.nvim](https://github.com/nvim-lua/popup.nvim) - An implementation of the Popup API from vim in Neovim
+- [Vimpeccable](https://github.com/svermeulen/vimpeccable) - .vimrc를 Lua로 작성하는데 도움이 되는 플러그인
+- [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - 여러번 작성하기 귀찮은 자주 쓰이는 Lua 함수들
+- [popup.nvim](https://github.com/nvim-lua/popup.nvim) - Vim의 팝업 API를 Neovim에서 구현
 - [nvim_utils](https://github.com/norcalli/nvim_utils)
-- [nvim-luadev](https://github.com/bfredl/nvim-luadev) - REPL/debug console for nvim lua plugins
-- [nvim-luapad](https://github.com/rafcamlet/nvim-luapad) - Interactive real time neovim scratchpad for embedded lua engine
-- [nlua.nvim](https://github.com/tjdevries/nlua.nvim) - Lua Development for Neovim
-- [BetterLua.vim](https://github.com/euclidianAce/BetterLua.vim) - Better Lua syntax highlighting in Vim/NeoVim
+- [nvim-luadev](https://github.com/bfredl/nvim-luadev) - Neovim의 Lua 플러그인들을 위한 REPL/디버그 콘솔
+- [nvim-luapad](https://github.com/rafcamlet/nvim-luapad) - 임베드된 Lua 엔진과 연결된 Neovim 스크래치패드 (실시간으로 실행결과 표시)
+- [nlua.nvim](https://github.com/tjdevries/nlua.nvim) - Neovim을 위한 Lua 개발 환경
+- [BetterLua.vim](https://github.com/euclidianAce/BetterLua.vim) - Vim/NeoVim에서 더 나은 Lua 문법 하이라이트를 제공
 
 ## Where to put Lua files
 
