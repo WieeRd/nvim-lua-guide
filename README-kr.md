@@ -14,7 +14,7 @@
 
 ## 소개
 
-TODO: [First-class-language](https://github.com/neovim/neovim/wiki/FAQ#why-embed-lua-instead-of-x)로써의 [Lua의 통합](https://www.youtube.com/watch?v=IP3J56sKtn0)은 Neovim의 killer feature가 되어가고 있습니다.
+[주 언어](https://github.com/neovim/neovim/wiki/FAQ#why-embed-lua-instead-of-x)로써의 [Lua의 도입](https://www.youtube.com/watch?v=IP3J56sKtn0)은 Neovim의 핵심 기능중 하나가 되어가고 있습니다.
 그러나 Lua로 플러그인을 작성하는 것에 대해 배울 수 있는 자료들은 Vimscript에 관해 찾을 수 있는 것들에 비해 부족합니다. 이 가이드는 사람들이 Lua를 사용하기 시작하기 위한 기본적인 정보들을 제공하려는 시도입니다.
 
 이 가이드는 여러분이 최소한 Neovim 버전 0.5 이상을 사용하고 있다고 가정합니다.
@@ -58,22 +58,22 @@ Lua로 플러그인을 작성하는 것에 관한 튜토리얼들이 이미 몇 
 - [nlua.nvim](https://github.com/tjdevries/nlua.nvim) - Neovim을 위한 Lua 개발 환경
 - [BetterLua.vim](https://github.com/euclidianAce/BetterLua.vim) - Vim/NeoVim에서 더 나은 Lua 문법 하이라이트를 제공
 
-## Where to put Lua files
+## 루아파일을 어디에 넣어야 하는가
 
 ### init.lua
 
-Neovim supports loading an `init.lua` file for configuration instead of the usual `init.vim`.
+Neovim은 `init.lua` 파일을`init.vim` 파일 대신 설정 파일로 로딩하는 것을 지원한다. 
 
-Note: `init.lua` is of course _completely_ optional. Support for `init.vim` is not going away and is still a valid option for configuration. Do keep in mind that some features are not 100% exposed to Lua yet.
+TODO: Note: `init.lua` 는 _당연히_ 부가적인 것이다. `init.vim` 파일의 지원은 여전히 있을 예정이며 설정을 함에 있어 여전히 유효한 방법으로써 있을 예정이다. Do keep in mind that some features are not 100% exposed to Lua yet.
 
-See also:
+참고 사항:
 - [`:help config`](https://neovim.io/doc/user/starting.html#config)
 
-### Modules
+### 모듈
 
-Lua modules are found inside a `lua/` folder in your `'runtimepath'` (for most users, this will mean `~/.config/nvim/lua` on \*nix systems and `~/AppData/Local/nvim/lua` on Windows). You can `require()` files in this folder as Lua modules.
+Lua 모듈들은 `'runtimepath'` 폴더 안의 `lua/`  폴더 안에서 볼 수 있다. (대부분의 유저들은 아마 \*nix는 `~/.config/nvim/lua` 일 것이며 Windows는 `~/AppData/Local/nvim/lua` 일 것이다). 또한 `require()` 를 통해 해당 폴더를 lua 모듈로 불러 올 수 있다.
 
-Let's take the following folder structure as an example:
+그럼 이제 예시삼아 아래의 폴더 구조를 보도록 합시다:
 
 ```text
 📂 ~/.config/nvim
@@ -90,32 +90,32 @@ Let's take the following folder structure as an example:
 └── 🇻 init.vim
 ```
 
-The following Lua code will load `myluamodule.lua`:
+아래의 Lua 코드는 `myluamodule.lua`를 로드할 것 입니다:
 
 ```lua
 require('myluamodule')
 ```
 
-Notice the absence of a `.lua` extension.
+보게되면 `.lua` 확장자가 빠져 있는 것을 알 수 있다.
 
-Similarly, loading `other_modules/anothermodule.lua` is done like so:
+비슷하게 `other_modules/anothermodule.lua` 같은 모듈을 로드하는 것은 이렇게 이루어진다:
 
 ```lua
 require('other_modules.anothermodule')
--- or
+-- 또는
 require('other_modules/anothermodule')
 ```
 
-Path separators are denoted by either a dot `.` or a slash `/`.
+경로 분리는 `.` 이나 `/` 로 이루어 진다.
 
-A folder containing an `init.lua` file can be required directly, without having to specify the name of the file.
+`init.lua`를 포함하고 있는 폴더는 파일의 이름을 특정할 필요 없이 호출이 가능하다.
 
 ```lua
 require('other_modules') -- loads other_modules/init.lua
 ```
 
-Requiring a nonexistent module or a module which contains syntax errors aborts the currently executing script.
-`pcall()` may be used to prevent errors.
+존재하지 않는 모듈을 호출하거나 문법 에러가 있는 모듈을 호출하는 것은 현재 작동중인 스크립트를 멈추게 한다.
+`pcall()`은 에러를 막기위해 사용된다.
 
 ```lua
 local ok, _ = pcall(require, 'module_with_error')
@@ -129,15 +129,15 @@ See also:
 
 #### Tips
 
-Several Lua plugins might have identical filenames in their `lua/` folder. This could lead to namespace clashes.
+일부 루아 플러그인은 각각의 `lua/` 폴더 내에서 동일한 파일이름을 가질수도 있으며 이는 namespace 충돌로 이어질 수 있다. 
 
-If two different plugins have a `lua/main.lua` file, then doing `require('main')` is ambiguous: which file do we want to source?
+만약 두개의 다른 플러그인이 `lua/main.lua` 피일을 가지고 있다면 `require('main')` 를 하는 것은 어느 파일을 우리가 고르고자 하는지 애매한 상태가 된다.
 
-It might be a good idea to namespace your config or your plugin with a top-level folder, like so: `lua/plugin_name/main.lua`
+그렇기에 플러그인의 최상위 폴더나 설정파일을`lua/plugin_name/main.lua` 와 같은 형태로 namespace하는 것이 좋다. 
 
 ### Runtime files
 
-Much like Vimscript files, Lua files can be loaded automatically from special folders in your `runtimepath`. Currently, the following folders are supported:
+Vimscript 파일과 마찬가지로 Lua 파일도 `runtimepath`에 있는 특정 폴더들로 부터 자동으로 로드될 수 있다. 현재 아래의 폴더들이 지원된다.
 
 - `colors/`
 - `compiler/`
@@ -147,15 +147,15 @@ Much like Vimscript files, Lua files can be loaded automatically from special fo
 - `plugin/`
 - `syntax/`
 
-Note: in a runtime directory, all `*.vim` files are sourced before `*.lua` files.
+Note: runtime 디렉토리에 모든 `*.vim` 파일들은 `*.lua` 파일보다 먼져 sourced 된다.
 
-See also:
+타 참고 자료:
 - [`:help 'runtimepath'`](https://neovim.io/doc/user/options.html#'runtimepath')
 - [`:help load-plugins`](https://neovim.io/doc/user/starting.html#load-plugins)
 
 #### Tips
 
-Since runtime files aren't based on the Lua module system, two plugins can have a `plugin/main.lua` file without it being an issue.
+runtime 파일들은 Lua 모듈 시스템을 기반으로 하고 있지 않기에 두개의 플러그인들은 `plugin/main.lua` 파일을 문제 없이 사용할 수 있다.
 
 ## Using Lua from Vimscript
 
