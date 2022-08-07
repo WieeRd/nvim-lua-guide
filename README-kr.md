@@ -15,7 +15,7 @@
 ## 소개
 
 [주력 언어](https://github.com/neovim/neovim/wiki/FAQ#why-embed-lua-instead-of-x)로써의 [Lua의 도입](https://www.youtube.com/watch?v=IP3J56sKtn0)은 Neovim의 핵심 기능중 하나가 되어가고 있습니다.
-그러나 Lua로 플러그인을 작성하는 것에 대해 배울 수 있는 자료들은 Vimscript에 관해 찾을 수 있는 것들에 비해 부족합니다. 이 가이드는 사람들이 Lua를 사용하기 시작하기 위한 기본적인 정보들을 제공하려는 시도입니다.
+그러나 Lua로 플러그인을 작성하는 것에 대해 배울 수 있는 자료들은 Vimscript에 관해 찾을 수 있는 것들에 비해 부족합니다. 이 가이드는 사람들이 Lua 사용을 시작하기 위한 기본적인 정보들을 제공하려는 시도입니다.
 
 이 가이드는 여러분이 최소한 Neovim 버전 0.5 이상을 사용하고 있다고 가정합니다.
 
@@ -56,7 +56,7 @@ Lua로 플러그인을 작성하는 것에 관한 튜토리얼들이 이미 몇 
 - [nvim-luadev](https://github.com/bfredl/nvim-luadev) - Neovim의 Lua 플러그인들을 위한 REPL/디버그 콘솔
 - [nvim-luapad](https://github.com/rafcamlet/nvim-luapad) - 임베드된 Lua 엔진과 연결된 Neovim 스크래치패드 (실시간으로 실행결과 표시)
 - [nlua.nvim](https://github.com/tjdevries/nlua.nvim) - Neovim을 위한 Lua 개발 환경
-- [BetterLua.vim](https://github.com/euclidianAce/BetterLua.vim) - Vim/NeoVim에서 더 나은 Lua 문법 하이라이트를 제공
+- [BetterLua.vim](https://github.com/euclidianAce/BetterLua.vim) - Vim/NeoVim에서 더 나은 Lua 구문 강조를 제공
 
 ## Lua 파일들을 어디에 넣어야 하는가
 
