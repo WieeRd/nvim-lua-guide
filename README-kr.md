@@ -157,20 +157,20 @@ Vimscript 파일과 마찬가지로 Lua 파일도 `runtimepath`에 있는 특정
 
 runtime 파일들은 Lua 모듈 시스템을 기반으로 하고 있지 않기에, 두개의 플러그인들이 `plugin/main.lua` 파일을 가지고 있어도 문제가 되지 않습니다.
 
-## Using Lua from Vimscript
+## Vimscript 내에서 Lua 사용하기
 
 ### :lua
 
-This command executes a chunk of Lua code.
+이 명령어는 Lua 코드 한 조각을 실행합니다.
 
 ```vim
 :lua require('myluamodule')
 ```
 
-Multi-line scripts are possible using heredoc syntax:
+여러 줄의 코드 또한 heredoc 문법을 이용하여 실행 가능합니다:
 
 ```vim
-echo "Here's a bigger chunk of Lua code"
+echo "여기 더 많은 양의 Lua 코드가 있습니다"
 
 lua << EOF
 local mod = require('mymodule')
@@ -184,50 +184,50 @@ print(tbl)
 EOF
 ```
 
-Note: each `:lua` command has its own scope and variables declared with the `local` keyword are not accessible outside of the command. This won't work:
+참고: 각각의 `:lua` 명령어는 고유의 스코프를 가지고 있으며 `local` 키워드로 선언된 변수들은 해당 명령어 바깥에서 사용이 불가능합니다. 이런 코드는 작동하지 않습니다:
 
 ```vim
 :lua local foo = 1
 :lua print(foo)
-" prints 'nil' instead of '1'
+" '1' 대신 'nil'을 출력합니다
 ```
 
-Note 2: the `print()` function in Lua behaves similarly to the `:echomsg` command. Its output is saved in the message-history and can be suppressed by the `:silent` command.
+참고 2: Lua의 `print()` 함수는 `:echomsg` 명령어와 비슷하게 작동합니다. 출력값은 메세지 기록에 저장되며 `:silent` 명령어로 출력을 막을 수 있습니다.
 
-See also:
+더보기:
 
 - [`:help :lua`](https://neovim.io/doc/user/lua.html#Lua)
 - [`:help :lua-heredoc`](https://neovim.io/doc/user/lua.html#:lua-heredoc)
 
 ### :luado
 
-This command executes a chunk of Lua code that acts on a range of lines in the current buffer. If no range is specified, the whole buffer is used instead. Whatever string is `return`ed from the chunk is used to determine what each line should be replaced with.
+이 명령어는 현재 버퍼의 일정 범위의 줄들에 대하여 Lua 코드를 실행합니다. 만약 범위가 주어지지 않으면, 버퍼 전체가 사용됩니다. 주어진 코드에서 `return`된 문자열은 각 줄의 내용을 대체합니다.
 
-The following command would replace every line in the current buffer with the text `hello world`:
+아래 명령어는 현재 버퍼의 모든 줄을 `hello world`라는 텍스트로 대체할 것입니다:
 
 ```vim
 :luado return 'hello world'
 ```
 
-Two implicit `line` and `linenr` variables are also provided. `line` is the text of the line being iterated upon whereas `linenr` is its number. The following command would make every line whose number is divisible by 2 uppercase:
+또한 2개의 암묵적인 변수 `line`과 `linenr`이 제공됩니다. `line`은 해당 줄의 텍스트 내용이며 `linenr`은 줄 번호입니다. 아래 명령어는 모든 짝수번째 줄들을 대문자로 만들 것입니다:
 
 ```vim
 :luado if linenr % 2 == 0 then return line:upper() end
 ```
 
-See also:
+더보기:
 
 - [`:help :luado`](https://neovim.io/doc/user/lua.html#:luado)
 
-### Sourcing Lua files
+### Lua 파일 실행하기
 
-Neovim provides 3 Ex commands to source Lua files
+Neovim은 Lua 파일 실행을 위해 3가지 Ex 명령어를 제공합니다
 
 - `:luafile`
 - `:source`
 - `:runtime`
 
-`:luafile` and `:source` are very similar:
+`:luafile`과 `:source`는 매우 비슷합니다:
 
 ```vim
 :luafile ~/foo/bar/baz/myluafile.lua
@@ -236,42 +236,42 @@ Neovim provides 3 Ex commands to source Lua files
 :source %
 ```
 
-`:source` also supports ranges, which can be useful to only execute part of a script:
+`:source`는 범위 또한 지원하며, 스크립트의 일부만을 실행할 때 유용할 수 있습니다:
 
 ```vim
 :1,10source
 ```
 
-`:runtime` is a little different: it uses the `'runtimepath'` option to determine which files to source. See [`:help :runtime`](https://neovim.io/doc/user/repeat.html#:runtime) for more details.
+`:runtime`는 약간 다릅니다: 이것은 `'runtimepath'` 옵션을 이용하여 어떤 파일을 실행할지 결정합니다. 더 자세한 내용은 [`:help :runtime`](https://neovim.io/doc/user/repeat.html#:runtime)를 참고하세요.
 
-See also:
+더보기:
 
 - [`:help :luafile`](https://neovim.io/doc/user/lua.html#:luafile)
 - [`:help :source`](https://neovim.io/doc/user/repeat.html#:source)
 - [`:help :runtime`](https://neovim.io/doc/user/repeat.html#:runtime)
 
-#### Sourcing a lua file vs calling require():
+#### Lua 파일 실행하기 vs require() 호출하기:
 
-You might be wondering what the difference between calling the `require()` function and sourcing a Lua file is and whether you should prefer one way over the other. They have different use cases:
+여러분은 어쩌면 `require()` 함수를 호출하는 것과 Lua 파일을 실행하는 것의 차이와 어떤 방식을 사용해야 하는지에 대한 의문이 들 수도 있습니다. 이들은 각자 다른 목적으로 사용됩니다:
 
 - `require()`:
-    - is a built-in Lua function. It allows you to take advantage of Lua's module system
-    - searches for modules in `lua/` folders in your `'runtimepath'`
-    - keeps track of what modules have been loaded and prevents a script from being parsed and executed a second time. If you change the file containing the code for a module and try to `require()` it a second time while Neovim is running, the module will not actually update
-- `:luafile`, `:source` and `:runtime`:
-    - are Ex commands. They do not support modules
-    - execute the contents of a script regardless of whether it has been executed before
-    - `:luafile` and `:source` take a path that is either absolute or relative to the working directory of the current window
-    - `:runtime` uses the `'runtimepath'` option to find files
+    - Lua의 내장 함수입니다. Lua의 모듈 시스템의 이점을 누릴 수 있습니다
+	- 모듈을 `'runtimepath'`에 포함된 `lua/` 폴더들 내에서 찾습니다
+	- 어떤 모듈들을 불러왔는지 기록하여 스크립트가 2번째로 해석되고 실행되는 것을 방지합니다. 만약 Neovim 작동 도중에 모듈의 코드 파일을 수정하고 다시 `require()`할 경우, 모듈은 업데이트되지 않을 것입니다.
+- `:luafile`, `:source` 그리고 `:runtime`:
+    - Ex 명령어들입니다. 모듈을 지원하지 않습니다
+    - 이전에 실행된 적이 있는지와 관계없이 스크립트의 내용을 실행합니다
+    - `:luafile`과 `:source`는 절대 경로 혹은 현재 창의 작업 디렉터리 기준 상대 경로를 받습니다
+    - `:runtime`는 `'runtimepath'` 옵션을 이용하여 파일을 찾습니다
 
-Files sourced via `:source`, `:runtime` or automatically from runtime directories will also show up in `:scriptnames` and `--startuptime`
+`:source`, `:runtime` 혹은 런타임 경로에서 자동으로 실행된 파일들은 `:scriptnames`와 `--startuptime`에 표시됩니다
 
 ### luaeval()
 
-This built-in Vimscript function evaluates a Lua expression string and returns its value. Lua data types are automatically converted to Vimscript types (and vice versa).
+이 내장 Vimscript 함수는 Lua 표현식을 연산하여 그 값을 반환합니다. Lua 자료형들은 자동으로 Vimscript 자료형들로 변환됩니다 (반대도 마찬가지입니다).
 
 ```vim
-" You can store the result in a variable
+" 결과를 변수에 저장할 수 있습니다
 let variable = luaeval('1 + 1')
 echo variable
 " 2
@@ -279,38 +279,38 @@ let concat = luaeval('"Lua".." is ".."awesome"')
 echo concat
 " 'Lua is awesome'
 
-" List-like tables are converted to Vim lists
+" 리스트처럼 사용된 테이블은 Vim 리스트로 변환됩니다
 let list = luaeval('{1, 2, 3, 4}')
 echo list[0]
 " 1
 echo list[1]
 " 2
-" Note that unlike Lua tables, Vim lists are 0-indexed
+" 참고로 Lua 테이블과 다르게 Vim 리스트는 인덱스 0부터 시작합니다
 
-" Dict-like tables are converted to Vim dictionaries
+" 딕셔너리처럼 사용된 테이블은 Vim 딕셔너리로 변환됩니다
 let dict = luaeval('{foo = "bar", baz = "qux"}')
 echo dict.foo
 " 'bar'
 
-" Same thing for booleans and nil
+" 논리값과 and nil도 마찬가지입니다
 echo luaeval('true')
 " v:true
 echo luaeval('nil')
 " v:null
 
-" You can create Vimscript aliases for Lua functions
+" Lua 함수에 대한 Vimscript alias를 만들 수 있습니다
 let LuaMathPow = luaeval('math.pow')
 echo LuaMathPow(2, 2)
 " 4
 let LuaModuleFunction = luaeval('require("mymodule").myfunction')
 call LuaModuleFunction()
 
-" It is also possible to pass Lua functions as values to Vim functions
+" Vim 함수들에게 Lua 함수를 값으로 넘겨주는 것도 가능합니다
 lua X = function(k, v) return string.format("%s:%s", k, v) end
 echo map([1, 2, 3], luaeval("X"))
 ```
 
-`luaeval()` takes an optional second argument that allows you to pass data to the expression. You can then access that data from Lua using the magic global `_A`:
+`luaeval()`의 부가적인 2번째 인자를 통해 표현식에 데이터를 넘겨줄 수 있습니다. 이 데이터들은 전역 변수 `_A`를 통해 접근할 수 있습니다:
 
 ```vim
 echo luaeval('_A[1] + _A[2]', [1, 1])
@@ -320,12 +320,12 @@ echo luaeval('string.format("Lua is %s", _A)', 'awesome')
 " 'Lua is awesome'
 ```
 
-See also:
+더보기:
 - [`:help luaeval()`](https://neovim.io/doc/user/lua.html#luaeval())
 
 ### v:lua
 
-This global Vim variable allows you to call Lua functions in the global namespace ([`_G`](https://www.lua.org/manual/5.1/manual.html#pdf-_G)) directly from Vimscript. Again, Vim data types are converted to Lua types and vice versa.
+이 Vim 전역 변수는 범용 네임스페이스([`_G`](https://www.lua.org/manual/5.1/manual.html#pdf-_G))에 속한 Lua 함수들을 Vimscript에서 직접 호출할 수 있게 해줍니다. 여기서도 마찬가지로 Vim 자료형들과 Lua 자료형들은 자동으로 상호 변환됩니다.
 
 ```vim
 call v:lua.print('Hello from Lua!')
@@ -335,7 +335,7 @@ let scream = v:lua.string.rep('A', 10)
 echo scream
 " 'AAAAAAAAAA'
 
-" How about a nice statusline?
+" 멋진 상태표시줄은 어떤가요?
 lua << EOF
 function _G.statusline()
     local filepath = '%f'
@@ -352,7 +352,7 @@ EOF
 
 set statusline=%!v:lua.statusline()
 
-" Also works in expression mappings
+" 표현식 매핑에서도 사용 가능합니다 (역자 주: 함수의 반환값 문자열이 실제로 눌린 키 배열인 것처럼 작동하는 단축키. `:h <expr>` 참고)
 lua << EOF
 function _G.check_back_space()
     local col = vim.api.nvim_win_get_cursor(0)[2]
@@ -365,32 +365,32 @@ inoremap <silent> <expr> <Tab>
     \ v:lua.check_back_space() ? "\<Tab>" :
     \ completion#trigger_completion()
 
-" Call a function from a Lua module by using single quotes and omitting parentheses:
+" 괄호를 생략하고 작은따옴표를 사용하여 Lua 모듈 내의 함수를 호출합니다:
 call v:lua.require'module'.foo()
 ```
 
-See also:
+더보기:
 - [`:help v:lua`](https://neovim.io/doc/user/eval.html#v:lua)
 - [`:help v:lua-call`](https://neovim.io/doc/user/lua.html#v:lua-call)
 
-#### Caveats
+#### 주의사항
 
-This variable can only be used to call functions. The following will always throw an error:
+이 변수는 함수 호출에만 사용할 수 있습니다. 아래와 같은 경우는 언제나 에러가 발생할 것입니다:
 
 ```vim
-" Aliasing functions doesn't work
+" 함수에 대한 alias를 만들 수 없습니다
 let LuaPrint = v:lua.print
 
-" Accessing dictionaries doesn't work
+" 딕셔너리에 접근할 수 없습니다
 echo v:lua.some_global_dict['key']
 
-" Using a function as a value doesn't work
+" 함수를 값으로 넘겨줄 수 없습니다
 echo map([1, 2, 3], v:lua.global_callback)
 ```
 
-### Tips
+### 팁
 
-You can get Lua syntax highlighting inside .vim files by putting `let g:vimsyn_embed = 'l'` in your configuration file. See [`:help g:vimsyn_embed`](https://neovim.io/doc/user/syntax.html#g:vimsyn_embed) for more on this option.
+`let g:vimsyn_embed = 'l'`를 설정 파일에 넣어 .vim 파일들 내에서 Lua 구문 강조를 활성화할 수 있습니다. 자세한 정보는 [`:help g:vimsyn_embed`](https://neovim.io/doc/user/syntax.html#g:vimsyn_embed)를 참고하세요.
 
 ## The vim namespace
 
